@@ -16,28 +16,51 @@
 		html, body { height: 100%; }
 		body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji", sans-serif; background: var(--bg); color: var(--fg); }
 		.container { max-width: 960px; margin: 0 auto; padding: 20px 16px 40px; }
-		header { text-align: center; margin-bottom: 16px; }
+
+		/* header left in case you re-add a title; otherwise safe to delete */
+		header { text-align: center; margin-bottom: 0; }
+
 		h1 { margin: 0 0 12px; font-size: 1.6rem; }
-		label.small { display: block; margin-bottom: 6px; color: var(--muted); font-size: .9rem; }
-		#q { width: 100%; padding: 12px 14px; border: 1px solid var(--border); border-radius: 12px; font-size: 1rem; }
+
 		.section { margin-top: 28px; }
 		.section h2 { font-size: 1.1rem; font-weight: 700; margin: 0 0 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; text-align: center; }
 		.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; justify-content: center; }
 		.tile { display: flex; align-items: center; gap: 12px; border: 1px solid var(--border); border-radius: 14px; padding: 14px; text-decoration: none; color: inherit; font-weight: 650; background: #fff; box-shadow: 0 1px 0 rgba(0,0,0,0.02); }
 		.tile:hover, .tile:focus-visible { outline: 3px solid var(--ring); outline-offset: 2px; }
 		.icon { width: 22px; height: 22px; border-radius: 4px; flex: 0 0 auto; }
-		#noResults { display: none; color: var(--muted); text-align: center; padding: 16px; }
 		footer { margin-top: 28px; color: var(--muted); text-align: center; font-size: .9rem; }
+
+		/* Hover-only credentials tooltip for Deputy */
+		.tile.has-cred { position: relative; }
+		.tile .creds{
+			position:absolute; top:100%; left:14px; transform:translateY(8px);
+			background:#0f172a; color:#fff; padding:10px 12px; border-radius:10px;
+			border:1px solid rgba(255,255,255,0.12); box-shadow:0 10px 30px rgba(2,6,23,0.25);
+			font-weight:500; font-size:.95rem; white-space:nowrap;
+			opacity:0; pointer-events:none; transition:opacity .15s ease, transform .15s ease; z-index:50;
+		}
+		.tile .creds::after{
+			content:""; position:absolute; top:-6px; left:12px;
+			border:6px solid transparent; border-bottom-color:#0f172a;
+		}
+		.tile.has-cred:hover .creds,
+		.tile.has-cred:focus-visible .creds,
+		.tile.has-cred:focus-within .creds { opacity:1; transform:translateY(4px); }
+
+		/* Optional: reduce motion for folks who prefer it */
+		@media (prefers-reduced-motion: reduce) {
+			.tile .creds { transition: none; }
+		}
 	</style>
 </head>
 <body>
 	<div class="container">
 		<header>
-			<h1>Clinic Links</h1>
+			<!-- <h1>Clinic Links</h1> -->
 		</header>
 
 		<section class="section" data-section="clinic">
-			<h2>Clinic</h2>
+			<h2>Clinic Links</h2>
 			<div class="grid" id="clinicList">
 				<a class="tile" href="https://adminliveunc.sharepoint.com/sites/ClinicAdministration/Shared%20Documents/Forms/AllItems.aspx?CT=1756345194553&OR=OWA%2DNT%2DMail&CID=0cdff51c%2D4b88%2Dc134%2D9f11%2D13ee193a76b0&e=5%3A025b4ce8d61b4e51823b453e75d54651&sharingv2=true&fromShare=true&at=9&FolderCTID=0x01200043D4B26111FC974CA486DF7729C61152&id=%2Fsites%2FClinicAdministration%2FShared%20Documents%2FDDS%5FHYG%20Chair%20Assignments%2FFALL%202025" target="_blank" rel="noopener noreferrer">
 					<img class="icon" alt="SharePoint" src="https://adminliveunc.sharepoint.com/_layouts/15/images/favicon.ico?rev=47" />
@@ -47,9 +70,13 @@
 					<img class="icon" alt="Excel" src="https://res-1.cdn.office.net/officeonline/x/s/h63BD80475830AA69__layouts/resources/FavIcon_Excel.ico" />
 					<span>Assisting Requests.xlsx</span>
 				</a>
-				<a class="tile" href="https://dc59ce06015843.na.deputy.com/#roster" target="_blank" rel="noopener noreferrer">
+				<a class="tile has-cred" href="https://dc59ce06015843.na.deputy.com/#roster" target="_blank" rel="noopener noreferrer" aria-describedby="deputyCreds">
 					<img class="icon" alt="Deputy" src="https://dc59ce06015843.na.deputy.com/assets/images/icons/favicon.ico?v=brandrefresh" />
-					<span>Deputy Schedule (username: deputypredoctoralstudents@unc.edu, password: predocdds/dh!)</span>
+					<span>Deputy Schedule</span>
+					<span id="deputyCreds" class="creds" role="tooltip">
+						<strong>username</strong>: deputypredoctoralstudents@unc.edu<br>
+						<strong>password</strong>: predocdds/dh!
+					</span>
 				</a>
 				<a class="tile" href="https://adminliveunc.sharepoint.com/sites/CarolinaDentistryClinicalOperations/SitePages/Student-Clinic-Operations.aspx" target="_blank" rel="noopener noreferrer">
 					<img class="icon" alt="SharePoint" src="https://adminliveunc.sharepoint.com/_layouts/15/images/favicon.ico?rev=43" />
@@ -108,22 +135,5 @@
 			Click a link to open it in a new tab.
 		</footer>
 	</div>
-	<script>
-		const q = document.getElementById('q');
-		const lists = [document.getElementById('clinicList'), document.getElementById('nicholasList')];
-		const allTiles = lists.flatMap(list => Array.from(list.querySelectorAll('.tile')));
-		const noResults = document.getElementById('noResults');
-		function filter() {
-			const term = q.value.trim().toLowerCase();
-			let shown = 0;
-			for (const tile of allTiles) {
-				const match = !term || tile.textContent.toLowerCase().includes(term);
-				tile.style.display = match ? '' : 'none';
-				if (match) shown++;
-			}
-			noResults.style.display = shown ? 'none' : '';
-		}
-		q.addEventListener('input', filter);
-	</script>
 </body>
 </html>
