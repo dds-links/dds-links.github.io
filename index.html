@@ -68,13 +68,11 @@
 <body>
 	<div class="container">
 		<header>
-			<h1>Clinic Links</h1>
-			<label for="q" class="small">Quick filter</label>
-			<input id="q" type="search" placeholder="Type to filter links… (e.g., SharePoint, deputy, fee)" autocomplete="off" />
+			<!-- <h1>Clinic Links</h1> -->
 		</header>
 
 		<section class="section" data-section="clinic">
-			<h2>Clinic</h2>
+			<h2>Clinic Links</h2>
 			<div class="grid" id="clinicList">
 				<a class="tile" href="https://adminliveunc.sharepoint.com/sites/ClinicAdministration/Shared%20Documents/Forms/AllItems.aspx?CT=1756345194553&OR=OWA%2DNT%2DMail&CID=0cdff51c%2D4b88%2Dc134%2D9f11%2D13ee193a76b0&e=5%3A025b4ce8d61b4e51823b453e75d54651&sharingv2=true&fromShare=true&at=9&FolderCTID=0x01200043D4B26111FC974CA486DF7729C61152&id=%2Fsites%2FClinicAdministration%2FShared%20Documents%2FDDS%5FHYG%20Chair%20Assignments%2FFALL%202025" target="_blank" rel="noopener noreferrer">
 					<img class="icon" alt="SharePoint" src="https://adminliveunc.sharepoint.com/_layouts/15/images/favicon.ico?rev=47" />
@@ -151,26 +149,9 @@
 
 		<p id="noResults">No links match your search.</p>
 		<footer>
-			Public links only. Do not add PHI or credentials. Links open in a new tab.
+			Click a link to open it in a new tab.
 		</footer>
 	</div>
-	<script>
-		const q = document.getElementById('q');
-		const lists = [document.getElementById('clinicList'), document.getElementById('nicholasList')];
-		const allTiles = lists.flatMap(list => Array.from(list.querySelectorAll('.tile')));
-		const noResults = document.getElementById('noResults');
-		function filter() {
-			const term = q.value.trim().toLowerCase();
-			let shown = 0;
-			for (const tile of allTiles) {
-				const match = !term || tile.textContent.toLowerCase().includes(term);
-				tile.style.display = match ? '' : 'none';
-				if (match) shown++;
-			}
-			noResults.style.display = shown ? 'none' : '';
-		}
-		q.addEventListener('input', filter);
-	</script>
 <script>
 (function(){
 	function copyToClipboard(text){
