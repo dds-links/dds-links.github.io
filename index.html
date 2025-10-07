@@ -16,20 +16,19 @@
 		html, body { height: 100%; }
 		body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji", sans-serif; background: var(--bg); color: var(--fg); }
 		.container { max-width: 960px; margin: 0 auto; padding: 20px 16px 40px; }
-
-		/* header left in case you re-add a title; otherwise safe to delete */
-		header { text-align: center; margin-bottom: 0; }
-
+		header { text-align: center; margin-bottom: 16px; }
 		h1 { margin: 0 0 12px; font-size: 1.6rem; }
-
+		label.small { display: block; margin-bottom: 6px; color: var(--muted); font-size: .9rem; }
+		#q { width: 100%; padding: 12px 14px; border: 1px solid var(--border); border-radius: 12px; font-size: 1rem; }
 		.section { margin-top: 28px; }
 		.section h2 { font-size: 1.1rem; font-weight: 700; margin: 0 0 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; text-align: center; }
 		.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; justify-content: center; }
 		.tile { display: flex; align-items: center; gap: 12px; border: 1px solid var(--border); border-radius: 14px; padding: 14px; text-decoration: none; color: inherit; font-weight: 650; background: #fff; box-shadow: 0 1px 0 rgba(0,0,0,0.02); }
 		.tile:hover, .tile:focus-visible { outline: 3px solid var(--ring); outline-offset: 2px; }
 		.icon { width: 22px; height: 22px; border-radius: 4px; flex: 0 0 auto; }
+		#noResults { display: none; color: var(--muted); text-align: center; padding: 16px; }
 		footer { margin-top: 28px; color: var(--muted); text-align: center; font-size: .9rem; }
-
+	
 		/* Hover-only credentials tooltip for Deputy */
 		.tile.has-cred { position: relative; }
 		.tile .creds{
@@ -39,32 +38,47 @@
 			font-weight:500; font-size:.95rem; white-space:nowrap;
 			opacity:0; pointer-events:none; transition:opacity .15s ease, transform .15s ease; z-index:50;
 		}
+		/* keep tooltip open when hovering it */
+		.tile .creds:hover{ opacity:1; transform:translateY(4px); pointer-events:auto; }
 		.tile .creds::after{
 			content:""; position:absolute; top:-6px; left:12px;
 			border:6px solid transparent; border-bottom-color:#0f172a;
 		}
+		/* rows + copy buttons inside tooltip */
+		.creds .row{ display:flex; align-items:center; gap:8px; margin:4px 0; }
+		.creds code{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; background: rgba(255,255,255,0.08); padding:2px 6px; border-radius:6px; }
+		.creds .copy{ border:1px solid rgba(255,255,255,0.25); background:transparent; color:#fff; padding:4px 8px; border-radius:8px; font-size:.85rem; cursor:pointer; }
+		.creds .copy:focus{ outline:2px solid #93c5fd; outline-offset:2px; }
+		.creds .copy.copied{ border-color:#22c55e; }
 		.tile.has-cred:hover .creds,
 		.tile.has-cred:focus-visible .creds,
-		.tile.has-cred:focus-within .creds { opacity:1; transform:translateY(4px); }
-
-		/* Optional: reduce motion for folks who prefer it */
-		@media (prefers-reduced-motion: reduce) {
-			.tile .creds { transition: none; }
+		.tile.has-cred:focus-within .creds{ opacity:1; transform:translateY(4px); pointer-events:auto; }
+		.tile .creds::after{
+			content: "";
+			position: absolute;
+			top: -6px; left: 12px;
+			border: 6px solid transparent;
+			border-bottom-color: #0f172a;
 		}
+		.tile.has-cred:hover .creds,
+		.tile.has-cred:focus-visible .creds,
+		.tile.has-cred:focus-within .creds { opacity: 1; transform: translateY(4px); }
 	</style>
 </head>
 <body>
 	<div class="container">
 		<header>
-			<!-- <h1>Clinic Links</h1> -->
+			<h1>Clinic Links</h1>
+			<label for="q" class="small">Quick filter</label>
+			<input id="q" type="search" placeholder="Type to filter links… (e.g., SharePoint, deputy, fee)" autocomplete="off" />
 		</header>
 
 		<section class="section" data-section="clinic">
-			<h2>Clinic Links</h2>
+			<h2>Clinic</h2>
 			<div class="grid" id="clinicList">
 				<a class="tile" href="https://adminliveunc.sharepoint.com/sites/ClinicAdministration/Shared%20Documents/Forms/AllItems.aspx?CT=1756345194553&OR=OWA%2DNT%2DMail&CID=0cdff51c%2D4b88%2Dc134%2D9f11%2D13ee193a76b0&e=5%3A025b4ce8d61b4e51823b453e75d54651&sharingv2=true&fromShare=true&at=9&FolderCTID=0x01200043D4B26111FC974CA486DF7729C61152&id=%2Fsites%2FClinicAdministration%2FShared%20Documents%2FDDS%5FHYG%20Chair%20Assignments%2FFALL%202025" target="_blank" rel="noopener noreferrer">
 					<img class="icon" alt="SharePoint" src="https://adminliveunc.sharepoint.com/_layouts/15/images/favicon.ico?rev=47" />
-					<span>Fall 2025 Schedules</span>
+					<span>Fall 2025</span>
 				</a>
 				<a class="tile" href="https://adminliveunc-my.sharepoint.com/:x:/g/personal/tmkelley_ad_unc_edu/EVzdM0wtaCNOhWfVEllOcmcB0Omp_42M5FELTJObVkkZfQ?email=SOD_AllDDSClassof2027%40unc.edu&e=ShFioa%3Fweb%3D1" target="_blank" rel="noopener noreferrer">
 					<img class="icon" alt="Excel" src="https://res-1.cdn.office.net/officeonline/x/s/h63BD80475830AA69__layouts/resources/FavIcon_Excel.ico" />
@@ -73,9 +87,13 @@
 				<a class="tile has-cred" href="https://dc59ce06015843.na.deputy.com/#roster" target="_blank" rel="noopener noreferrer" aria-describedby="deputyCreds">
 					<img class="icon" alt="Deputy" src="https://dc59ce06015843.na.deputy.com/assets/images/icons/favicon.ico?v=brandrefresh" />
 					<span>Deputy Schedule</span>
-					<span id="deputyCreds" class="creds" role="tooltip">
-						<strong>username</strong>: deputypredoctoralstudents@unc.edu<br>
-						<strong>password</strong>: predocdds/dh!
+					<span id="deputyCreds" class="creds" role="tooltip" aria-live="polite">
+						<div class="row"><strong>username</strong>: <code>deputypredoctoralstudents@unc.edu</code>
+							<button class="copy" type="button" data-copy-text="deputypredoctoralstudents@unc.edu">Copy</button>
+						</div>
+						<div class="row"><strong>password</strong>: <code>predocdds/dh!</code>
+							<button class="copy" type="button" data-copy-text="predocdds/dh!">Copy</button>
+						</div>
 					</span>
 				</a>
 				<a class="tile" href="https://adminliveunc.sharepoint.com/sites/CarolinaDentistryClinicalOperations/SitePages/Student-Clinic-Operations.aspx" target="_blank" rel="noopener noreferrer">
@@ -100,7 +118,7 @@
 				</a>
 				<a class="tile" href="https://unc.az1.qualtrics.com/jfe/form/SV_2b1wUAvf82aQWxw" target="_blank" rel="noopener noreferrer">
 					<img class="icon" alt="Form" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 24 24'%3E%3Cpath fill='%2364748b' d='M6 2h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2m8 1.5V8h4.5zM7 13h10v-1.5H7zm0 3.5h10V15H7zm0-7h7V8H7z'/%3E%3C/svg%3E" />
-					<span>Fee Adjustment Request Portal</span>
+					<span>fee adjustment request portal</span>
 				</a>
 				<a class="tile" href="https://dentalschool2.unc.edu/secure/academic/absences/viewstatus/" target="_blank" rel="noopener noreferrer">
 					<img class="icon" alt="UNC Dentistry" src="https://dentalschool.unc.edu/secure/favicon.ico" />
@@ -108,7 +126,7 @@
 				</a>
 				<a class="tile" href="https://dentalschool.unc.edu/secure/assessment/studentassessmentall.cfm" target="_blank" rel="noopener noreferrer">
 					<img class="icon" alt="UNC Dentistry" src="https://dentalschool.unc.edu/img/favicon/favicon-32x32.png" />
-					<span>ACE Forms</span>
+					<span>ACE Form</span>
 				</a>
 			</div>
 		</section>
@@ -118,7 +136,7 @@
 			<div class="grid" id="nicholasList">
 				<a class="tile" href="https://adminliveunc.sharepoint.com/:x:/r/sites/ClinicalEducationTeam/_layouts/15/Doc.aspx?sourcedoc=%7BD0242768-660C-42D2-A210-46216B1860C6%7D&file=027-140%20Nicholas%20LaPlant.xlsx&fromShare=true&action=default&mobileredirect=true" target="_blank" rel="noopener noreferrer">
 					<img class="icon" alt="Excel" src="https://res.public.onecdn.static.microsoft/officeonline/x/s/h63BD80475830AA69__layouts/resources/FavIcon_Excel.ico" />
-					<span>Nicholas' Eidson Spreadsheet.xlsx</span>
+					<span>Eidson Spreadsheet.xlsx</span>
 				</a>
 				<a class="tile" href="https://voice.google.com/u/0/messages" target="_blank" rel="noopener noreferrer">
 					<img class="icon" alt="Google Voice" src="https://www.gstatic.com/voice-fe/icons/voice_favicon.png" />
@@ -126,14 +144,62 @@
 				</a>
 				<a class="tile" href="https://adminliveunc-my.sharepoint.com/personal/nlaplant_ad_unc_edu/_layouts/15/Doc.aspx?sourcedoc={433b6094-1772-4ecc-88d2-3998d02acada}&action=edit&wd=target%28Patient%20notes.one%7C0e9c9ae4-f37a-4b9d-982b-54b25a9b2246%2FUntitled%20Page%7C6f67a2a6-aeb3-4b6e-8be4-f67cf773dc42%2F%29&wdorigin=NavigationUrl" target="_blank" rel="noopener noreferrer">
 					<img class="icon" alt="OneNote" src="https://res.public.onecdn.static.microsoft/officeonline/o/s/h9E1DA5BF71513549_resources/1033/FavIcon_OneNote.ico" />
-					<span>Nicholas' Patient Notes</span>
+					<span>Patient Notes (OneNote)</span>
 				</a>
 			</div>
 		</section>
 
+		<p id="noResults">No links match your search.</p>
 		<footer>
-			Click a link to open it in a new tab.
+			Public links only. Do not add PHI or credentials. Links open in a new tab.
 		</footer>
 	</div>
+	<script>
+		const q = document.getElementById('q');
+		const lists = [document.getElementById('clinicList'), document.getElementById('nicholasList')];
+		const allTiles = lists.flatMap(list => Array.from(list.querySelectorAll('.tile')));
+		const noResults = document.getElementById('noResults');
+		function filter() {
+			const term = q.value.trim().toLowerCase();
+			let shown = 0;
+			for (const tile of allTiles) {
+				const match = !term || tile.textContent.toLowerCase().includes(term);
+				tile.style.display = match ? '' : 'none';
+				if (match) shown++;
+			}
+			noResults.style.display = shown ? 'none' : '';
+		}
+		q.addEventListener('input', filter);
+	</script>
+<script>
+(function(){
+	function copyToClipboard(text){
+		if (navigator.clipboard && navigator.clipboard.writeText){
+			return navigator.clipboard.writeText(text);
+		}
+		// Fallback for older browsers
+		return new Promise(function(resolve, reject){
+			try{
+				var ta=document.createElement('textarea');
+				ta.value=text; ta.setAttribute('readonly',''); ta.style.position='fixed'; ta.style.opacity='0';
+				document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+				resolve();
+			}catch(e){ reject(e); }
+		});
+	}
+	var buttons=document.querySelectorAll('.tile.has-cred .copy');
+	buttons.forEach(function(btn){
+		btn.addEventListener('click', function(e){
+			e.preventDefault(); e.stopPropagation();
+			var text=btn.getAttribute('data-copy-text');
+			if(!text) return;
+			copyToClipboard(text).then(function(){
+				var old=btn.textContent; btn.textContent='Copied!'; btn.classList.add('copied'); btn.disabled=true;
+				setTimeout(function(){ btn.textContent=old; btn.classList.remove('copied'); btn.disabled=false; }, 1000);
+			});
+		});
+	});
+})();
+</script>
 </body>
 </html>
