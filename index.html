@@ -26,14 +26,6 @@
 		  display: grid;
 		  grid-template-columns: repeat(auto-fit, minmax(260px, 1.5fr));
 		  gap: 14px;
-		  /* justify-content: center;   */
-		  /* justify-items: center;   */
-/*		  margin-inline: auto;      */
-		  /* width: fit-content;
-		  max-width: 100%;
-		  margin-inline: auto; */
-		  
-
 		}
 		.tile { display: flex; align-items: center; gap: 12px; border: 1px solid var(--border); border-radius: 14px; padding: 14px; text-decoration: none; color: inherit; font-weight: 650; background: #fff; box-shadow: 0 1px 0 rgba(0,0,0,0.02); }
 		.tile:hover, .tile:focus-visible { outline: 3px solid var(--ring); outline-offset: 2px; }
@@ -43,8 +35,16 @@
 	
 		/* Hover-only credentials tooltip for Deputy */
 		.tile.has-cred { position: relative; }
+		.tile.has-cred::before {
+		  content: "";
+		  position: absolute;
+		  left: 0;
+		  right: 0;
+		  top: 100%;
+		  height: 12px;   /* bridge size; adjust 8–14px if needed */
+		}
 		.tile .creds{
-			position:absolute; top:100%; left:14px; transform:translateY(8px);
+			position:absolute; top:100%; left:0px; transform:translateY(8px);
 			background:#0f172a; color:#fff; padding:10px 12px; border-radius:10px;
 			border:1px solid rgba(255,255,255,0.12); box-shadow:0 10px 30px rgba(2,6,23,0.25);
 			font-weight:500; font-size:.95rem; white-space:nowrap;
@@ -65,6 +65,50 @@
 		.tile.has-cred:hover .creds,
 		.tile.has-cred:focus-visible .creds,
 		.tile.has-cred:focus-within .creds{ opacity:1; transform:translateY(4px); pointer-events:auto; }
+
+		@media (max-width: 640px) {
+		  .grid {
+		    grid-template-columns: 1fr;
+		    justify-content: center;
+		    min-width: 100%;
+		  }
+
+		  /* Keep tooltip from widening the page on small screens */
+		  .tile .creds{
+		    white-space: normal;
+		    max-width: calc(100vw - 32px);
+		    word-break: normal;
+		    overflow-wrap: break-word;
+		    font-size: .9rem;
+		    overflow-x: hidden;
+		    text-align: center;
+		  }
+
+		  /* Hide the labels and the credential strings on mobile */
+		  .creds .row code {
+		    display: none;
+		  }
+
+		  /* Make the buttons read “Copy username / Copy password” */
+		  .creds .copy {
+		    display: block;
+		    width: 100%;
+		    padding: 12px 14px;
+		    border-radius: 10px;
+		    border: 1px solid rgba(255,255,255,.35);
+		    background: transparent;
+		    color: #fff;
+
+		    /* hide the literal "Copy" text and replace via ::after */
+		    font-size: 0;
+		  }
+		  .creds .row:first-child .copy::after { content: "Copy username"; font-size: 1rem; }
+		  .creds .row:last-child  .copy::after { content: "Copy password"; font-size: 1rem; }
+
+		  /* While copied, show a clear state */
+		  .creds .copy.copied { border-color: #22c55e; }
+		  .creds .copy.copied::after { content: "Copied!"; }
+		}
 	</style>
 </head>
 <body>
